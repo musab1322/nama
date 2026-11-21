@@ -1,0 +1,9 @@
+node_modules/
+.next/
+*.tsbuildinfo
+.env
+.env.local
+
+# scratch
+scripts/ui-screenshots/env.sh
+scripts/ui-screenshots/shots/

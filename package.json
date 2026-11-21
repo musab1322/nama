@@ -1,0 +1,46 @@
+{
+  "name": "banna",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "npm run dev -w @banna/web",
+    "build": "npm run build -w @banna/web",
+    "start": "npm run start -w @banna/web",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p apps/web/tsconfig.json",
+    "worker": "tsx apps/worker/src/index.ts",
+    "build:template": "tsx scripts/build-template.ts",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.2",
+    "@tailwindcss/postcss": "^4.3.5",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.77.0",
+    "next": "^15.5.29",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.1",
+    "tailwindcss": "^4.3.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.17",
+    "@types/node": "^26.6.6",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

@@ -1,0 +1,24 @@
+# Filled by cell-control for each app. Image tags are pinned when the cell is built (by digest).
+app:
+  id: ""            # cell app id (returned to the factory as the backend ref)
+  host: ""          # e.g. app-1.cell.example.sa
+  siteUrl: ""
+  redirectUrls: []
+
+postgres:
+  instances: 1
+  storage: 5Gi
+  backupDestination: ""   # in-Kingdom object storage
+
+secrets:
+  name: app-secrets       # created by cell-control: JWT_SECRET, DB password, publishable and secret keys
+
+images:
+  postgres: ghcr.io/cloudnative-pg/postgresql:PIN
+  rest: postgrest/postgrest:PIN
+  auth: supabase/gotrue:PIN
+  storage: supabase/storage-api:PIN
+  functions: supabase/edge-runtime:PIN
+
+resources:
+  small: { requests: { cpu: 50m, memory: 96Mi }, limits: { cpu: 500m, memory: 256Mi } }

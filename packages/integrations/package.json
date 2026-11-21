@@ -1,0 +1,13 @@
+{
+  "name": "@banna/integrations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vercel, domains, Apple, Google Play, publishers",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2"
+  }
+}

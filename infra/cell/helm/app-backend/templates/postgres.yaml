@@ -1,0 +1,21 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: db
+  labels: { banna.sa/app: {{ .Values.app.id | quote }} }
+spec:
+  instances: {{ .Values.postgres.instances }}
+  imageName: {{ .Values.images.postgres }}
+  storage:
+    size: {{ .Values.postgres.storage }}
+  bootstrap:
+    initdb:
+      database: postgres
+      owner: postgres
+  backup:
+    retentionPolicy: "30d"
+    barmanObjectStore:
+      destinationPath: {{ .Values.postgres.backupDestination | quote }}
+      s3Credentials:
+        accessKeyId: { name: backup-credentials, key: ACCESS_KEY_ID }
+        secretAccessKey: { name: backup-credentials, key: SECRET_ACCESS_KEY }

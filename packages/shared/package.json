@@ -1,0 +1,10 @@
+{
+  "name": "@banna/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared server code: env, Supabase admin client, crypto, jobs, credits, snapshots, errors",
+  "exports": {
+    "./*": "./src/*.ts"
+  }
+}

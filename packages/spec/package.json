@@ -1,0 +1,8 @@
+{
+  "name": "@banna/spec",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AppSpec: the approved specification of a generated app (FR-002a, ADR-007)",
+  "exports": { "./*": "./src/*.ts" }
+}

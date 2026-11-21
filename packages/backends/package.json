@@ -1,0 +1,10 @@
+{
+  "name": "@banna/backends",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Per-app backend providers",
+  "exports": {
+    "./*": "./src/*.ts"
+  }
+}

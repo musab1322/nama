@@ -1,0 +1,73 @@
+{{- $root := . -}}
+{{- $components := dict
+  "rest"      (dict "image" .Values.images.rest      "port" 3000 "path" "/rest/v1")
+  "auth"      (dict "image" .Values.images.auth      "port" 9999 "path" "/auth/v1")
+  "storage"   (dict "image" .Values.images.storage   "port" 5000 "path" "/storage/v1")
+  "functions" (dict "image" .Values.images.functions "port" 9000 "path" "/functions/v1") }}
+{{- range $name, $c := $components }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  labels: { banna.sa/app: {{ $root.Values.app.id | quote }}, component: {{ $name }} }
+spec:
+  replicas: 1
+  selector: { matchLabels: { component: {{ $name }} } }
+  template:
+    metadata: { labels: { component: {{ $name }} } }
+    spec:
+      automountServiceAccountToken: false
+      securityContext: { runAsNonRoot: true, seccompProfile: { type: RuntimeDefault } }
+      containers:
+        - name: {{ $name }}
+          image: {{ $c.image }}
+          ports: [{ containerPort: {{ $c.port }} }]
+          envFrom: [{ secretRef: { name: {{ $root.Values.secrets.name }} } }]
+          env:
+            - { name: DB_HOST, value: db-rw }
+            - { name: SITE_URL, value: {{ $root.Values.app.siteUrl | quote }} }
+            - { name: URI_ALLOW_LIST, value: {{ join "," $root.Values.app.redirectUrls | quote }} }
+          resources: {{- toYaml $root.Values.resources.small | nindent 12 }}
+          securityContext: { allowPrivilegeEscalation: false, readOnlyRootFilesystem: true }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: {{ $name }} }
+spec:
+  selector: { component: {{ $name }} }
+  ports: [{ port: {{ $c.port }}, targetPort: {{ $c.port }} }]
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls: [{ hosts: [{{ .Values.app.host | quote }}], secretName: api-tls }]
+  rules:
+    - host: {{ .Values.app.host | quote }}
+      http:
+        paths:
+{{- range $name, $c := $components }}
+          - path: {{ $c.path }}(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend: { service: { name: {{ $name }}, port: { number: {{ $c.port }} } } }
+{{- end }}
+---
+# apps are isolated from each other: only the ingress controller and this namespace may connect
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: isolate-app }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: {}
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: ingress-nginx } }

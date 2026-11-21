@@ -1,0 +1,8 @@
+{
+  "name": "@banna/policy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Store, payment and donation rules checked before generation and submission (FR-008, FR-015)",
+  "exports": { "./*": "./src/*.ts" }
+}

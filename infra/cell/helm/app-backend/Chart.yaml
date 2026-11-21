@@ -1,0 +1,5 @@
+apiVersion: v2
+name: app-backend
+description: One generated app's backend inside the Saudi cell (Postgres + Auth + REST + Storage + Functions). Installed by cell-control, one namespace per app. NOT DEPLOYED.
+type: application
+version: 0.1.0
