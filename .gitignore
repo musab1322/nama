@@ -7,3 +7,4 @@ node_modules/
 # scratch
 scripts/ui-screenshots/env.sh
 scripts/ui-screenshots/shots/
+staging/*.env
